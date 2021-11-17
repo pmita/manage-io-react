@@ -21,7 +21,7 @@ export const useSignup = () => {
 
       if (!res) {
         throw new Error('Could not complete signup')
-      }
+      } 
 
       // upload user thumbnail to a thumbnails folder
       // if folder doesn't exist the first time, firebase will create it for us
