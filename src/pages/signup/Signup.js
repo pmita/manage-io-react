@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Signup.css';
+//FIREBASE
+import { useSignup } from '../../hooks/useSignup';
 
 const Signup = () => {
     //STATE
@@ -9,10 +11,12 @@ const Signup = () => {
     // eslint-disable-next-line no-unused-vars
     const [thumbnail, setThumbnail] = useState(null);
     const [thumbnailError, setThumbnailError] = useState(null);
+    const { signup, isPending, error } = useSignup();
+
     //EVENTS
     const handleSubmit = (e) =>{
         e.preventDefault();
-        console.table(email, password, displayName, thumbnail, thumbnailError)
+        signup(email, password, displayName, thumbnail);
     }
 
     const handleFileChange = (e) => {
@@ -80,7 +84,10 @@ const Signup = () => {
                 />
                 {thumbnailError && <div className='error'>{thumbnailError}</div>}
             </label>
-            <button className='btn'>Sign Up</button>
+            {!isPending && <button className='btn'>Sign Up</button>}
+            {isPending && <button className='btn' disabled>Loading...</button>}
+
+            {error && <p className='error'>{error}</p>}
         </form>
     );
 }
