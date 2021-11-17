@@ -9,11 +9,13 @@ import Create from './pages/create/Create';
 import Project from './pages/project/Project';
 //COMPONENTS
 import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <Sidebar />
         <div className='container'>
           <Navbar />
           <Routes>
