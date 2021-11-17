@@ -17,7 +17,7 @@
     font-weight: bold;
     text-align: center;
     letter-spacing: 1px;
-    padding: 40pc 30px;
+    padding: 40px 30px;
     border-bottom: 1px solid rgba(255,255,255, 0.2);
 }
 
@@ -49,6 +49,6 @@
     background: var(--bg-color);
 }
 
-.side .links .active img{
-    filter: invert(40%);
+.sidebar .links .active img{
+    filter: invert(10%);
 }
