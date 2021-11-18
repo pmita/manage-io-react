@@ -5,14 +5,21 @@ import Dashboard from '../assets/dashboard_icon.svg';
 import AddIcon from '../assets/add_icon.svg';
 //ROUTER
 import { NavLink } from 'react-router-dom';
+//COMPONENTS
+import Avatar from './Avatar';
+//HOOKS
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const Sidebar = () => {
+    //STATE
+    const { user } = useAuthContext();
+
     return(
         <div className='sidebar'>
             <div className='sidebar-content'>
                 <div className='user'>
-                    {/*Avatar for user will go here late*/}
-                    <p>Hey user</p>
+                    <Avatar src={user.photoURL} />
+                    <p>Hey {user.displayName}</p>
                 </div>
                 <nav className='links'>
                     <ul>
