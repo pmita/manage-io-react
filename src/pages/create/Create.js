@@ -4,6 +4,12 @@ import './Create.css';
 import Select from 'react-select';
 //HOOKS
 import { useCollection } from '../../hooks/useCollection';
+import { useAuthContext } from '../../hooks/useAuthContext';
+//FIREBASE
+import { timestamp } from '../../firebase/config';
+import { useFirestore } from '../../hooks/useFirestore';
+//ROUTER
+import { useNavigate } from 'react-router';
 
 //CONSTANTS
 const categories = [
@@ -15,18 +21,64 @@ const categories = [
 
 const Create = () => {
     //STATE & VARIABLES
+    const navigate = useNavigate();
+    const { user } = useAuthContext();
     const { documents } = useCollection('users');
+    const { addDocument, response } = useFirestore('projects');
     const [users, setUsers] = useState([]);
     const [name, setName] = useState('');
     const [details, setDetails] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [category, setCategory] = useState('');
     const [assignedUsers, setAssignedUsers] = useState([]);
+    const [formError, setFormError] = useState(null);
 
     //EVENTS
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
         console.log(name, details, dueDate, category, assignedUsers);
+        setFormError(null);
+
+        //check for details the users has submitted
+        if(!category){
+            setFormError('Please select a project category');
+            return;
+        }
+
+        if(assignedUsers.length < 1){
+            setFormError('Please assign the project to at least one user');
+            return;
+        }
+
+        //add project to our firestore collection
+        const createdBy = { //details for our project
+            displayName : user.displayName,
+            photURL : user.photoURL,
+            id : user.uid
+        }
+        const assignedUsersList = assignedUsers.map(u => { //details for our project
+            return { 
+                displayName : u.value.displayName,
+                photoURL : u.value.photoURL,
+                id : u.value.id
+            }
+        })
+
+        const project = {
+            name : name,
+            details : details,
+            category : category.value,
+            dueDate : timestamp.fromDate(new Date(dueDate)),
+            comments : [],
+            createdBy : createdBy,
+            assignedUsersList : assignedUsersList
+        }
+
+        await addDocument(project);
+        if(!response.error){
+            navigate('/');
+        }
+
     }
 
     //useEFFECT
@@ -78,7 +130,7 @@ const Create = () => {
                     />
                 </label>
                 <label>
-                    <span>Assigne to: </span>
+                    <span>Assigned to: </span>
                     <Select
                         options={users}
                         onChange={(option) => setAssignedUsers(option)}
@@ -86,6 +138,7 @@ const Create = () => {
                     />
                 </label>
                 <button className='btn'>Add Project</button>
+                {formError && <p className='error'>{formError}</p>}
             </form>
         </div>
     );
