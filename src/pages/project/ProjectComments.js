@@ -32,7 +32,7 @@ const ProjectComments = ({ project }) => {
     }
 
     return(
-        <div>
+        <div className='project-comments'>
             <h4>Project Comments</h4>
 
             <ul>
