@@ -1,10 +1,19 @@
 import React from 'react';
 import './Dashboard.css';
+//HOOKS
+import { useCollection } from '../../hooks/useCollection';
+//COMPONENTS
+import ProjectList from '../../components/ProjectList';
 
 const Dashboard = () => {
+    //STATE & VARIABLES
+    const { documents, error } = useCollection('projects');
+
     return(
         <div>
-            Welcome to Dashboard page component
+            <h2 className='page-title'>Dashboard</h2>
+            {error && <p className='error'>{error}</p>}
+            {documents && <ProjectList projects={documents} />}
         </div>
     );
 }
